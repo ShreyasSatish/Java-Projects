@@ -1,5 +1,8 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
+
+import static javax.management.Query.or;
 
 public class Bioreactor {
     int startingPopulation;
@@ -11,6 +14,7 @@ public class Bioreactor {
     String cellName;
     String modelType;
     Map<Integer, Double> population;
+    double maxPopulation;
 
     public Bioreactor(int startingPopulation, float growthRate, String cellName,
                       String timeUnit, String modelType, int time, int timeStep) {
@@ -25,25 +29,76 @@ public class Bioreactor {
     }
 
     public void changeModelType(String modelType) {
+        // Allows to change the model type
         this.modelType = modelType;
     }
 
     public void startModel() {
-         population = new HashMap<> ();
-         double currentPopulation;
-        for (int i = 0; i < time; i += timeStep) {
-            currentPopulation = Math.round(startingPopulation * Math.exp(growthRate * i));
-            population.put(i, currentPopulation);
-            if (currentPopulation >= 9.223372036854776E18) {
-                System.out.println("Terminating model as max population has been reached at " + i + " " + timeUnit);
+        // Starts the model depending on the
+        // model type
+        population = new HashMap<> ();
+        double currentPopulation;
+        switch (modelType) {
+
+            case "exponential":
+                // Starts the exponential model and
+                // terminates when population reaches
+                // the max Double value
+                for (int i = 0; i < time; i += timeStep) {
+                    currentPopulation = Math.round(startingPopulation * Math.exp(growthRate * i));
+                    population.put(i, currentPopulation);
+                    if (currentPopulation >= 9.223372036854776E18) {
+                        System.out.println("Terminating model as max population has been reached at "
+                                + i + " " + timeUnit);
+                        break;
+                    }
+                }
                 break;
-            }
+
+            case "logistic":
+                // Starts the logistic growth model
+                // Get user input for maxPopulation value (K)
+                Scanner userInput = new Scanner(System.in);
+                System.out.println("Enter the max population / parameter K");
+                this.maxPopulation = userInput.nextDouble();
+
+                for (int i = 0; i < time; i += timeStep) {
+                    currentPopulation = (maxPopulation * startingPopulation) / (startingPopulation +
+                            (maxPopulation - startingPopulation) * Math.exp(-growthRate * i));
+                    population.put(i, currentPopulation);
+                    if ((currentPopulation >= 9.223372036854776E18) || (currentPopulation >= maxPopulation))  {
+                        System.out.println("Terminating model as max population has been reached at "
+                        + i + " " + timeUnit);
+                        break;
+                    }
+                }
+                break;
+
+            default:
+                System.out.println("Error: Invalid model type");
         }
     }
 
     public void printPopulation() {
+        // Prints a step by step recount of the population
+        // as it was calculated
         for (Map.Entry<Integer, Double> entry : population.entrySet()) {
-                System.out.println("The population at " +  entry.getKey() + " " + timeUnit + " is: " + entry.getValue());
+                System.out.println("The population at " +  entry.getKey()
+                        + " " + timeUnit + " is: " + entry.getValue());
+        }
+    }
+
+    public void printPopulation(int time) {
+        // Prints the population at a singular moment
+        // in time
+
+        // Check if the entered time is valid
+        if (population.containsKey(time)) {
+            System.out.println("The population at " + time + " " + timeUnit
+                    + " is: " + population.get(time));
+        }
+        else {
+            System.out.println("Error: That time is not modelled");
         }
     }
 }
