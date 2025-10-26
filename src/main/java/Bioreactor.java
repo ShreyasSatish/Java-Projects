@@ -7,7 +7,7 @@ import static javax.management.Query.or;
 public class Bioreactor {
     int startingPopulation;
     int cellPopulation;
-    float growthRate;
+    double growthRate;
     int time;
     String timeUnit;
     int timeStep;
@@ -15,8 +15,9 @@ public class Bioreactor {
     String modelType;
     Map<Integer, Double> population;
     double maxPopulation;
+    double criticalPopulation;
 
-    public Bioreactor(int startingPopulation, float growthRate, String cellName,
+    public Bioreactor(int startingPopulation, double growthRate, String cellName,
                       String timeUnit, String modelType, int time, int timeStep) {
         this.startingPopulation = startingPopulation;
         this.cellPopulation = startingPopulation;
@@ -41,7 +42,7 @@ public class Bioreactor {
         switch (modelType) {
 
             case "exponential":
-                // Starts the exponential model and
+                // Starts the Exponential Model and
                 // terminates when population reaches
                 // the max Double value
                 for (int i = 0; i < time; i += timeStep) {
@@ -56,7 +57,7 @@ public class Bioreactor {
                 break;
 
             case "logistic":
-                // Starts the logistic growth model
+                // Starts the Logistic Growth model
                 // Get user input for maxPopulation value (K)
                 Scanner userInput = new Scanner(System.in);
                 System.out.println("Enter the max population / parameter K");
@@ -69,6 +70,39 @@ public class Bioreactor {
                     if ((currentPopulation >= 9.223372036854776E18) || (currentPopulation >= maxPopulation))  {
                         System.out.println("Terminating model as max population has been reached at "
                         + i + " " + timeUnit);
+                        break;
+                    }
+                }
+                break;
+
+            case "allee":
+                // Starts the Allee Effect model
+                // Get user input for criticalPopulation value (N_c)
+                // and the maxPopulation value (k)
+                Scanner userInput2 = new Scanner(System.in);
+                System.out.println("Enter the max population / parameter K");
+                this.maxPopulation = userInput2.nextDouble();
+                Scanner userInput3 = new Scanner(System.in);
+                System.out.println("Enter the critical population / parameter N_c");
+                this.criticalPopulation = userInput3.nextDouble();
+
+                double rateChange;
+                currentPopulation = startingPopulation;
+                double previousPopulation;
+                for (int i = 0; i < time; i += timeStep) {
+                    previousPopulation = currentPopulation;
+                    rateChange = (growthRate * currentPopulation) *
+                            (1 - currentPopulation / maxPopulation) *
+                            (currentPopulation / criticalPopulation - 1);
+                    currentPopulation = previousPopulation + rateChange * timeStep;
+                    population.put(i, currentPopulation);
+                    if ((currentPopulation >= 9.223372036854776E18) ||
+                            (currentPopulation >= maxPopulation)) {
+                        System.out.println("Terminating model as max population has been reached at "
+                                + i + " " + timeUnit);
+                        break;
+                    } else if (currentPopulation <= 0) {
+                        System.out.println("Terminating model as the population is extinct (<= 0)");
                         break;
                     }
                 }
