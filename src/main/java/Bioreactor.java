@@ -5,17 +5,17 @@ import java.util.Scanner;
 import static javax.management.Query.or;
 
 public class Bioreactor {
-    int startingPopulation;
-    int cellPopulation;
-    double growthRate;
-    int time;
-    String timeUnit;
-    int timeStep;
-    String cellName;
-    String modelType;
-    Map<Integer, Double> population;
-    double maxPopulation;
-    double criticalPopulation;
+    protected int startingPopulation;
+    protected int cellPopulation;
+    protected double growthRate;
+    protected int time;
+    protected String timeUnit;
+    protected int timeStep;
+    protected String cellName;
+    protected String modelType;
+    protected Map<Integer, Double> population;
+    protected double maxPopulation;
+    protected double criticalPopulation;
 
     public Bioreactor(int startingPopulation, double growthRate, String cellName,
                       String timeUnit, String modelType, int time, int timeStep) {
