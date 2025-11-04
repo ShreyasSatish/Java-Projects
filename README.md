@@ -46,6 +46,6 @@ This model takes into account lag-time/adaptation time. It is the only model out
 ```
 Where $\mu_{max}$ is the maximum growth rate, $\alpha (t)$ is the adjustment function and $f(N)$ is an inhibition function describing end of growth inhibition. Note that some literature adds a term $\zeta (t)$, which is a Gaussian white noise term. This is not incldued in my implementation for simplicity. The form of the adjustment function is:
 ```math
-\alpha(t) = \frac{1}{1 + \frac{e^{ -\mu_{max}t }}{a_{0}}}
+\alpha(t) = \frac{1}{1 + \frac{e^{ -\mu_{max}t }}{\alpha_{0}}}
 ```
-Where $l$ is the lag time. Although there is no exact solution to the differential equation, we can again employ the Euler Method, or other Numerical Methods, to find approximate solutions to the equation.
+Where $\alpha_{0}$ is the initial physiological state variable and calculated from the initial "physiological state" as $\alpha_{0) = \frac{1}{q_{0}}$. Although there is no exact solution to the differential equation, we can again employ the Euler Method, or other Numerical Methods, to find approximate solutions to the equation.
