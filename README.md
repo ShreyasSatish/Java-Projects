@@ -37,4 +37,15 @@ This takes into account that the size of the population itself may affect the gr
 ```math
 \frac{dN}{dt} = rN(1- \frac{N}{K})(\frac{N}{N_{c}} - 1)
 ```
-Where $N_{c}$ is the critical population size (threshold) required for growth to occur. Note that this model has no exact solution.
+Where $N_{c}$ is the critical population size (threshold) required for growth to occur. Note that this model has no exact solution. But we can still implement this using the Euler Method, among other Numerical methods.
+
+### Baranyi Model
+This model takes into account lag-time/adaptation time. It is the only model out of the ones implemented that takes this into account. It is of the form
+```math
+\frac{dN}{Ndt} = \mu_{max} \alpha (t) f(N) 
+```
+Where $\mu_{max}$ is the maximum growth rate, $\alpha (t)$ is the adjustment function and $f(N)$ is an inhibition function describing end of growth inhibition. Note that some literature adds a term $\zeta (t)$, which is a Gaussian white noise term. This is not incldued in my implementation for simplicity. The form of the adjustment function is:
+```math
+\alpha (t) = \frac{t^{n}}{l^{n} + t^{n}}
+```
+Where $l$ is the lag time. Although there is no exact solution to the differential equation, we can again employ the Euler Method, or other Numerical Methods, to find approximate solutions to the equation.
