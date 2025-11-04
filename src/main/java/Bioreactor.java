@@ -1,7 +1,6 @@
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-
 import static javax.management.Query.or;
 
 public class Bioreactor {
@@ -16,6 +15,7 @@ public class Bioreactor {
     protected Map<Integer, Double> population;
     protected double maxPopulation;
     protected double criticalPopulation;
+    protected double physiologicalState;
 
     public Bioreactor(int startingPopulation, double growthRate, String cellName,
                       String timeUnit, String modelType, int time, int timeStep) {
@@ -58,11 +58,14 @@ public class Bioreactor {
 
             case "logistic":
                 // Starts the Logistic Growth model
-                // Get user input for maxPopulation value (K)
+                // Get user input for maxPopulation parameter (K)
                 Scanner userInput = new Scanner(System.in);
                 System.out.println("Enter the max population / parameter K");
                 this.maxPopulation = userInput.nextDouble();
 
+                // Iterate and terminate the programme
+                // when the max Double or maxPopulation
+                // has been reached
                 for (int i = 0; i < time; i += timeStep) {
                     currentPopulation = (maxPopulation * startingPopulation) / (startingPopulation +
                             (maxPopulation - startingPopulation) * Math.exp(-growthRate * i));
@@ -88,14 +91,68 @@ public class Bioreactor {
 
                 double rateChange;
                 currentPopulation = startingPopulation;
-                double previousPopulation;
+
+                // Iterate using Euler Method
+                // Terminate the programme when
+                // The max double value has been reached,
+                // reaches the maxPopulation value, or
+                // population <= 0 (extinct)
                 for (int i = 0; i < time; i += timeStep) {
-                    previousPopulation = currentPopulation;
+                    // Calculate derivative
                     rateChange = (growthRate * currentPopulation) *
                             (1 - currentPopulation / maxPopulation) *
                             (currentPopulation / criticalPopulation - 1);
-                    currentPopulation = previousPopulation + rateChange * timeStep;
+                    // Euler Method
+                    currentPopulation += rateChange * timeStep;
                     population.put(i, currentPopulation);
+
+                    if ((currentPopulation >= 9.223372036854776E18) ||
+                            (currentPopulation >= maxPopulation)) {
+                        System.out.println("Terminating model as max population has been reached at "
+                                + i + " " + timeUnit);
+                        break;
+                    } else if (currentPopulation <= 0) {
+                        System.out.println("Terminating model as the population is extinct (<= 0)");
+                        break;
+                    }
+                }
+                break;
+
+            case "baranyi":
+                // Starts the Baranyi Model
+
+                // Get user input for max population
+                // and initial physiological state q_0
+                Scanner userInput4 = new Scanner(System.in);
+                System.out.println("Enter the max population / parameter N_max");
+                this.maxPopulation = userInput4.nextDouble();
+                Scanner userInput5 = new Scanner(System.in);
+                System.out.println("Enter the initial physiological state q_0");
+                this.physiologicalState = userInput5.nextDouble();
+
+                // Calculate the initial physiological state variable
+                double alphaZero = 1 / physiologicalState;
+                // Calculate the initial log population
+                currentPopulation = Math.log(startingPopulation);
+                // Define variables used in the iteration
+                double rateChangePopulation;
+                double rateChangeAlpha;
+                double alpha = alphaZero;
+
+                // Start the iteration
+                for (int i = 0; i < time; i += timeStep) {
+                    // Calculate derivative for population
+                    rateChangePopulation = growthRate * alpha * (1/ (1 + (currentPopulation / maxPopulation)));
+                    // Update the current population via Euler Method
+                    currentPopulation += rateChangePopulation * timeStep;
+                    // Calculate derivative for alpha
+                    rateChangeAlpha = 1/(1 + (Math.exp(-growthRate * i)/alphaZero));
+                    // Update current alpha via Euler Method
+                    alpha = alpha + rateChangeAlpha * timeStep;
+                    // Add unlogged population to Map
+                    population.put(i, currentPopulation);
+
+                    // Check if any termination conditions are met
                     if ((currentPopulation >= 9.223372036854776E18) ||
                             (currentPopulation >= maxPopulation)) {
                         System.out.println("Terminating model as max population has been reached at "
@@ -124,7 +181,7 @@ public class Bioreactor {
 
     public void printPopulation(int time) {
         // Prints the population at a singular moment
-        // in time
+        // in time using method overloading
 
         // Check if the entered time is valid
         if (population.containsKey(time)) {
