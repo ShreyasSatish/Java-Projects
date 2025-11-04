@@ -42,10 +42,10 @@ Where $N_{c}$ is the critical population size (threshold) required for growth to
 ### Baranyi Model
 This model takes into account lag-time/adaptation time. It is the only model out of the ones implemented that takes this into account. It is of the form
 ```math
-\frac{dN}{Ndt} = \mu_{max} \alpha (t) f(N) 
+ \frac{d\ln N(t)}{dt} = \mu_{max}\cdot \alpha(t)\cdot \frac{1}{1+ \frac{N(t)}{N_{max}}}
 ```
 Where $\mu_{max}$ is the maximum growth rate, $\alpha (t)$ is the adjustment function and $f(N)$ is an inhibition function describing end of growth inhibition. Note that some literature adds a term $\zeta (t)$, which is a Gaussian white noise term. This is not incldued in my implementation for simplicity. The form of the adjustment function is:
 ```math
-\alpha (t) = \frac{t^{n}}{l^{n} + t^{n}}
+\alpha(t) = \frac{1}{1 + \frac{e^{ -\mu_{max}t }}{a_{0}}}
 ```
 Where $l$ is the lag time. Although there is no exact solution to the differential equation, we can again employ the Euler Method, or other Numerical Methods, to find approximate solutions to the equation.
