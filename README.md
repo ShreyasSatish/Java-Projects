@@ -17,7 +17,7 @@ N(t) &= N_{0} e^{rt}
 Where $N$ is the population size and $r$ is the population growth rate.
 
 ### Logistic Growth
-This is a better model than the Exponential Model as it has an upper limit to the population, but still does not account of competition or death. We can write it as follows:
+This is a better model than the Exponential Bioreactor.Model as it has an upper limit to the population, but still does not account of competition or death. We can write it as follows:
 ```math
 \begin{align*}
 \frac{dN}{dt} &= rN - \frac{rN^2}{K} \\
@@ -39,7 +39,7 @@ This takes into account that the size of the population itself may affect the gr
 ```
 Where $N_{c}$ is the critical population size (threshold) required for growth to occur. Note that this model has no exact solution. But we can still implement this using the Euler Method, among other Numerical methods.
 
-### Baranyi Model
+### Baranyi Bioreactor.Model
 This model takes into account lag-time/adaptation time. It is the only model out of the ones implemented that takes this into account. It is of the form
 ```math
  \frac{d\ln N(t)}{dt} = \mu_{max}\cdot \alpha(t)\cdot \frac{1}{1+ \frac{N(t)}{N_{max}}}
