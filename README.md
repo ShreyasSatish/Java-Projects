@@ -21,7 +21,7 @@ This is a better model than the Exponential Bioreactor.Model as it has an upper 
 ```math
 \begin{align*}
 \frac{dN}{dt} &= rN - \frac{rN^2}{K} \\
-N &= \frac{KN_{0}}{N_{0} + (K-N_{0} e^{-rt})}
+N &= \frac{KN_{0}}{N_{0} + (K-N_{0})e^{-rt}}
 \end{align*}
 ```
 
@@ -48,4 +48,4 @@ Where $\mu_{max}$ is the maximum growth rate, $\alpha (t)$ is the adjustment fun
 ```math
 \alpha(t) = \frac{1}{1 + \frac{e^{ -\mu_{max}t }}{\alpha_{0}}}
 ```
-Where $\alpha_{0}$ is the initial physiological state variable and calculated from the initial "physiological state" as $\alpha_{0) = \frac{1}{q_{0}}$. Although there is no exact solution to the differential equation, we can again employ the Euler Method, or other Numerical Methods, to find approximate solutions to the equation.
+Where $\alpha_{0}$ is the initial physiological state variable and calculated from the initial "physiological state" as $\alpha_{0} = \frac{1}{q_{0}}$. Although there is no exact solution to the differential equation, we can again employ the Euler Method, or other Numerical Methods, to find approximate solutions to the equation.
