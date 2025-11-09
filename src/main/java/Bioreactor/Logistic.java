@@ -43,8 +43,8 @@ public class Logistic extends Model{
         for (double i = 0; i < time; i += timeStep) {
             // Calculate currentPopulation according to model
             // and round the value to the nearest whole number
-            currentPopulation = Math.round((maxPopulation * startingPopulation) / (startingPopulation +
-                    maxPopulation - (startingPopulation * Math.exp(-growthRate * i))));
+            currentPopulation = Math.round(((maxPopulation * startingPopulation) / (startingPopulation +
+                                (maxPopulation - startingPopulation) * Math.exp(-growthRate * i))));
             population.put(i, currentPopulation);
             if (currentPopulation >= maxPopulation) {
                 System.out.println("Terminating model as max population has been reached at "
