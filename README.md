@@ -21,7 +21,7 @@ This is a better model than the Exponential Bioreactor.Model as it has an upper 
 ```math
 \begin{align*}
 \frac{dN}{dt} &= rN - \frac{rN^2}{K} \\
-N &= \frac{KN_{0}}{N_{0} + (K-N_{0} e^{-rt})}
+N &= \frac{KN_{0}}{N_{0} + (K-N_{0})e^{-rt}}
 \end{align*}
 ```
 
